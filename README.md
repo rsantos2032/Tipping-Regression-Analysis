@@ -1117,19 +1117,19 @@ param_grids = {
 	"Linear": {"feature_selection__n_features_to_select": list(range(1, 13))},
 	"Ridge": {
 		"feature_selection__n_features_to_select": list(range(1, 13)),
-		"regressor__alpha": [0.1, 1, 10]
+		"regressor__alpha": [0.001, 0.01, 0.1, 1.0, 10]
 	},
 	"Lasso": {
 		"feature_selection__n_features_to_select": list(range(1, 13)),
-		"regressor__alpha": [0.01, 0.1, 1]
+		"regressor__alpha": [0.001, 0.01, 0.1, 1.0, 10]
 	},
 	"SVR": {
-		"regressor__C": [0.1, 1, 10],
+		"regressor__C": [0.01, 0.1, 1, 10],
 		"regressor__kernel": ["rbf", "linear"]
 	},
 	"RandomForest": {
-        "regressor__n_estimators": [100, 200],
-        "regressor__max_depth": [None, 5, 10]
+        "regressor__n_estimators": [100, 200, 300],
+        "regressor__max_depth": [None, 5, 10, 15]
     }
 }
 
@@ -1157,10 +1157,10 @@ for name, res in results.items():
 ```
 
     Linear: R^2 = 0.342, Best Params = {'feature_selection__n_features_to_select': 6}
-    Ridge: R^2 = 0.363, Best Params = {'feature_selection__n_features_to_select': 2, 'regressor__alpha': 1}
+    Ridge: R^2 = 0.363, Best Params = {'feature_selection__n_features_to_select': 2, 'regressor__alpha': 1.0}
     Lasso: R^2 = 0.345, Best Params = {'feature_selection__n_features_to_select': 12, 'regressor__alpha': 0.01}
-    SVR: R^2 = 0.341, Best Params = {'regressor__C': 0.1, 'regressor__kernel': 'rbf'}
-    RandomForest: R^2 = 0.303, Best Params = {'regressor__max_depth': 5, 'regressor__n_estimators': 200}
+    SVR: R^2 = 0.358, Best Params = {'regressor__C': 0.01, 'regressor__kernel': 'linear'}
+    RandomForest: R^2 = 0.303, Best Params = {'regressor__max_depth': 5, 'regressor__n_estimators': 100}
 
 
 
@@ -1183,7 +1183,7 @@ models = {
 	]),
 	"SVR": Pipeline([
 		("preprocessor", preprocessor),
-		("regressor", SVR(C=0.1, kernel="rbf"))
+		("regressor", SVR(C=0.01, kernel="linear"))
 	]),
 	"RandomForest": Pipeline([
 			("preprocessor", preprocessor),
@@ -1216,6 +1216,8 @@ print(pd.DataFrame(results))
     0        Linear  0.286821  0.082266  0.244378  0.516045
     1         Ridge  0.272468  0.074239  0.230729  0.563269
     2         Lasso  0.276556  0.076483  0.234061  0.550066
-    3           SVR  0.327492  0.107251  0.268443  0.369062
-    4  RandomForest  0.295397  0.087259  0.241186  0.486670
+    3           SVR  0.287901  0.082887  0.243645  0.512391
+    4  RandomForest  0.299098  0.089460  0.248907  0.473727
 
+
+Looking at these results, the Random Forest model underperforms the most. The SVR and base Linear Regression model both perform similarly to each other. The Ridge and Lasso models appear to have the best results. The concerning aspect of the Ridge model, however, is that it only uses 2 of the 13 features. This could indicate that the model performs best on the hold out set but may not perform the best on other data. Since our data is sparse from one-hot encoding the categorical data, it might be the better suited model for this project. Thus, the lasso regression model is our chosen ML model. 
