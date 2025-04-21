@@ -1221,3 +1221,18 @@ print(pd.DataFrame(results))
 
 
 Looking at these results, the Random Forest model underperforms the most. The SVR and base Linear Regression model both perform similarly to each other. The Ridge and Lasso models appear to have the best results. The concerning aspect of the Ridge model, however, is that it only uses 2 of the 13 features. This could indicate that the model performs best on the hold out set but may not perform the best on other data. Since our data is sparse from one-hot encoding the categorical data, it might be the better suited model for this project. Thus, the lasso regression model is our chosen ML model. 
+
+
+```python
+model = models["Lasso"]
+model.fit(X_train, y_train_log)
+model_diagnostic_plots("Lasso Regression", model, X_test, y_test_log)
+```
+
+
+    
+![png](TipsRegression_files/TipsRegression_75_0.png)
+    
+
+
+Finally, after taking a look at model diagnostics, we can see that all the plots appear to show expected behavior. The actual vs predicted follows the line, the residuals vs predicted show equal variance, and the residuals distribution appears mostly normal.
